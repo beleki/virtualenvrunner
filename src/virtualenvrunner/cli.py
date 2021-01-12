@@ -105,6 +105,7 @@ def _error_handling():
 
 
 def clirun(cmd, env=None):
+    print('in clirun')
     if cmd:
         subprocess.check_call(cmd,
                               shell=_is_shell(cmd),

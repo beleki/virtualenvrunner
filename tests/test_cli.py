@@ -63,7 +63,10 @@ def test_create_virtualenv_positional_arguments(script_runner,
 def get_clis_with_base(base):
     return [base] + [
         '{base}{v.major}.{v.minor}'.format(
-            base=base, v=v) for v in get_python_versions()]
+            base=base, v=v) if v.minor else
+        '{base}{v.major}'.format(
+            base=base, v=v)
+        for v in get_python_versions()]
 
 
 def get_base_clis():
@@ -90,13 +93,21 @@ def get_run_tuples():
 
 
 def get_run_tuples_for_version(v):
-    return [('{cli}{major}.{minor}'.format(
-        major=v.major, minor=v.minor, cli=cli),
+    if v.minor:
+        return [('{cli}{major}.{minor}'.format(
+            major=v.major, minor=v.minor, cli=cli),
+                 t[0],
+                 'python{major}.{minor}{suffix}'.format(
+                     major=v.major, minor=v.minor, suffix=t[1])) for t in [
+                         ('win32', '.exe'),
+                         ('linux', '')] for cli in get_base_clis()]
+    return [('{cli}{major}'.format(
+        major=v.major, cli=cli),
              t[0],
-             'python{major}.{minor}{suffix}'.format(
-                 major=v.major, minor=v.minor, suffix=t[1])) for t in [
-                     ('win32', '.exe'),
-                     ('linux', '')] for cli in get_base_clis()]
+             'python{major}{suffix}'.format(
+                 major=v.major, suffix=t[1])) for t in [
+        ('win32', '.exe'),
+        ('linux', '')] for cli in get_base_clis()]
 
 
 @pytest.mark.parametrize('cli,sys_platform,expected_pythonexe',
@@ -268,7 +279,12 @@ def _get_versioned_run_scripts_with_expected_help():
             cli=cli),
         'python{major}.{minor}'.format(
             major=v.major,
-            minor=v.minor))
+            minor=v.minor)) if v.minor else
+            ('{cli}{major}'.format(
+                major=v.major,
+                cli=cli),
+            'python{major}'.format(
+                major=v.major))
             for v in get_python_versions()
             for cli in get_base_clis()]
 

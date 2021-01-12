@@ -9,5 +9,5 @@ class PythonVersion(namedtuple('PythonVersion', ['major', 'minor'])):
 
 
 def get_python_versions():
-    for v in [(2, 7), (3, 4), (3, 5), (3, 6)]:
+    for v in [('2', ''), ('2', '7'), ('3', '4'), ('3', '5'), ('3', '6'), ('3', '')]:
         yield PythonVersion(*v)

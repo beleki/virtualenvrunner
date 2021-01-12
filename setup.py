@@ -52,7 +52,10 @@ def get_console_scripts():
             clif=clif) for clif in get_clifunctions()] +
         [('{clif.cli}{major}.{minor} = '
           'virtualenvrunner.cli:{clif.function}{major}{minor}'.format(
-              major=v.major, minor=v.minor, clif=clif))
+              major=v.major, minor=v.minor, clif=clif)) if v.minor else
+         ('{clif.cli}{major} = '
+          'virtualenvrunner.cli:{clif.function}{major}'.format(
+             major=v.major, clif=clif))
          for v in get_python_versions()
          for clif in get_versionedclifunctions()])
 

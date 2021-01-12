@@ -87,6 +87,7 @@ class Runner(object):
         self._files = set()
         self._new_virtualenv = False
         self._save_freeze_path = None
+        print('virtualenv_pythonexe:{}'.format(virtualenv_pythonexe))
 
     def __enter__(self):
         self._setup_virtualenv()
@@ -281,6 +282,7 @@ class Runner(object):
         return subprocess.check_call(cmd, shell=True, env=env, stdout=stdout)
 
     def run(self, *args, **kwargs):
+        print('in runner run')
         kwargscopy = kwargs.copy()
         kwargscopy['env'] = self.env
         return self._run(*args, **kwargscopy)
@@ -297,12 +299,12 @@ class TmpVenvRunner(Runner):
     """
     def __enter__(self):
         self._tmp_virtualenv_dir = None
-        return super(TmpVenvRunner, self).__enter__()
+        return super(TmpVenvRunner, self).__enter__()  # pylint: disable=super-with-arguments
 
     def __exit__(self, *args):
         if self._tmp_virtualenv_dir:
             shutil.rmtree(self._tmp_virtualenv_dir)
-        super(TmpVenvRunner, self).__exit__(*args)
+        super(TmpVenvRunner, self).__exit__(*args)  # pylint: disable=super-with-arguments
 
     @property
     def virtualenv_dir(self):
@@ -322,7 +324,7 @@ class VerboseRunner(Runner):
     """
 
     def _write_line(self, line):
-        super(VerboseRunner, self)._write_line(line)
+        super(VerboseRunner, self)._write_line(line)  # pylint: disable=super-with-arguments
         print(line, end='')
 
 
